@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex gap-3 align-items-center mb-3">
+    <h1>Settings: Dr. Pepper</h1>
+</div>
+<form class="d-flex flex-column gap-3" action="{% url 'index' %}">
+    <div>
+        <label for="loginInput" class="form-label w-25 d-inline-block">Login</label>
+        <input type="text" class="form-control is-invalid w-50 d-inline-block" id="loginInput"
+               maxlength="127"
+               value="dr_pepper"
+               placeholder="Enter your login here"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Please enter the login.
+        </div>
+    </div>
+    <div>
+        <label for="emailInput" class="form-label w-25 d-inline-block">Email</label>
+        <input type="email" class="form-control is-invalid w-50 d-inline-block" id="emailInput"
+               maxlength="127"
+               value="dr_pepper@mail.ru"
+               placeholder="example@mail.ru"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            This email address is already in use.
+        </div>
+    </div>
+    <div>
+        <label for="nicknameInput" class="form-label w-25 d-inline-block">Nickname</label>
+        <input type="text" class="form-control is-invalid w-50 d-inline-block" id="nicknameInput"
+               maxlength="127"
+               value="Dr. Pepper"
+               placeholder="nickname"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            This nickname is already in use.
+        </div>
+    </div>
+    <div>
+        <label for="avatarInput" class="form-label w-25 d-inline-block">Avatar</label>
+        <img src="../static/img/cat.jpg" alt="Avatar" class="img-thumbnail w-25 d-inline-block mb-3">
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+
+        <input type="file" class="form-control is-invalid w-50 d-inline-block" id="avatarInput"
+               maxlength="127"
+               placeholder="C:/..."></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Please add an avatar.
+        </div>
+    </div>
+    <div>
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="w-50 d-inline-block">
+            <button type="submit" class="btn btn-primary w-25">Save</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

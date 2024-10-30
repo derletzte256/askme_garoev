@@ -1,0 +1,36 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="d-flex flex-column gap-3">
+        {% include 'layouts/one_question.html' %}
+        <hr/>
+        {% for answer in answers %}
+            {% include 'layouts/answer.html' %}
+        {% endfor %}
+    
+        {% if not answers %}
+            <div>No answers yet :(</div>
+        {% endif %}
+    </div>
+
+    {% if answers %}
+        {% include 'layouts/pagination.html' %}
+    {% endif %}
+
+    <hr class="mt-0"/>
+
+    <form class="d-flex gap-3 flex-column">
+        <div>
+            <textarea class="form-control is-invalid" id="answerInput" rows="3"
+                      placeholder="Enter your answer here"></textarea>
+            <div class="invalid-feedback">
+                Please enter the answer.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-25">Answer</button>
+    </form>
+
+{% endblock %}
+        

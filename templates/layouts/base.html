@@ -1,0 +1,87 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>StackDump</title>
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vanilla.css' %}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-primary-subtle">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'index' %}">StackDump</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex" role="search" action="{% url 'tag' 'blender'%}">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                </form>
+                <a class="btn btn-outline-success" href="{% url 'ask' %}">Ask</a>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+            <div class="border border-white border-2 rounded">
+                <img src="{% static 'img/cat.jpg' %}" alt="Avatar" class="img-fluid rounded" style="height: 40px;">
+            </div>
+            <div>
+                <div class="fw-bold">Letzter_255</div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'settings' %}">Settings</a>
+                    <a href="#">Log out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="container my-5">
+    <div class="row justify-content-between">
+        <div class="col-9 d-flex flex-column gap-3">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div class="col-3">
+            <section class="mb-3 mt-5">
+                <h3>Popular tags</h3>
+                <div class="gap-1">
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-primary">Perl</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-secondary">Python</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-success">PostgreSQL</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-danger">Golang</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-warning">Docker</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-info">Kubernetes</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-light">Discord</span></a>
+                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-dark">Youtube</span></a>
+                </div>
+            </section>
+            <section>
+                <h3>Best member</h3>
+                <ul class="d-flex flex-column">
+                    <a href="#">Member</a>
+                    <a href="#">Member</a>
+                    <a href="#">Member</a>
+                    <a href="#">Member</a>
+                </ul>
+            </section>
+        </div>
+    </div>
+</main>
+<footer class="p-3 bg-light">
+    <div class="container">
+        <div class="row">This is basic footer. All rights reserved</div>
+    </div>
+</footer>
+<script src="{% static 'js/bootstrap.js'%}"></script>
+</body>
+</html>

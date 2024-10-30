@@ -1,0 +1,82 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex gap-3 align-items-center mb-3">
+    <h1>Registration</h1>
+</div>
+<form class="d-flex flex-column gap-3" action="{% url 'index' %}">
+    <div>
+        <label for="loginInput" class="form-label w-25 d-inline-block">Login</label>
+        <input type="text" class="form-control is-invalid w-50 d-inline-block" id="loginInput"
+               maxlength="127"
+               placeholder="Enter your login here"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Please enter the login.
+        </div>
+    </div>
+    <div>
+        <label for="emailInput" class="form-label w-25 d-inline-block">Email</label>
+        <input type="email" class="form-control is-invalid w-50 d-inline-block" id="emailInput"
+               maxlength="127"
+               placeholder="example@mail.ru"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            This email address is already in use.
+        </div>
+    </div>
+    <div>
+        <label for="nicknameInput" class="form-label w-25 d-inline-block">Nickname</label>
+        <input type="email" class="form-control is-invalid w-50 d-inline-block" id="nicknameInput"
+               maxlength="127"
+               placeholder="Darova"></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            This nickname is already in use.
+        </div>
+    </div>
+    <div>
+        <label for="passwordInput" class="form-label w-25 d-inline-block">Password</label>
+        <input type="password" class="form-control is-invalid w-50 d-inline-block" id="passwordInput"
+               maxlength="127"
+               placeholder="********">
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Wrong password!
+        </div>
+    </div>
+    <div>
+        <label for="repeatPasswordInput" class="form-label w-25 d-inline-block">Password</label>
+        <input type="password" class="form-control is-invalid w-50 d-inline-block" id="repeatPasswordInput"
+               maxlength="127"
+               placeholder="********">
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Password doesn't match!
+        </div>
+    </div>
+    <div>
+        <label for="avatarInput" class="form-label w-25 d-inline-block">Avatar</label>
+        <input type="file" class="form-control is-invalid w-50 d-inline-block" id="avatarInput"
+               maxlength="127"
+               placeholder="C:/..."></input>
+
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="invalid-feedback w-50 d-inline-block">
+            Please add an avatar.
+        </div>
+    </div>
+    <div>
+        <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+        <div class="w-50 d-inline-block">
+            <button type="submit" class="btn btn-primary w-25">Sign up!</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

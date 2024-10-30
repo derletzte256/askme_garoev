@@ -1,0 +1,42 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+        <div class="d-flex gap-3 align-items-center mb-3">
+            <h1>Log In</h1>
+        </div>
+        <form class="d-flex flex-column gap-3" action="{% url 'index' %}">
+            <div>
+                <label for="loginInput" class="form-label w-25 d-inline-block">Login</label>
+                <input type="text" class="form-control is-invalid w-50 d-inline-block" id="loginInput"
+                       maxlength="127"
+                       placeholder="Enter your login here"></input>
+
+                <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+                <div class="invalid-feedback w-50 d-inline-block">
+                    Please enter the login.
+                </div>
+            </div>
+            <div>
+                <label for="passwordInput" class="form-label w-25 d-inline-block">Password</label>
+                <input type="password" class="form-control is-invalid w-50 d-inline-block" id="passwordInput"
+                       maxlength="127"
+                       placeholder="********">
+                <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+                <div class="invalid-feedback w-50 d-inline-block">
+                    Wrong password!
+                </div>
+            </div>
+            <div>
+                <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+                <div class="w-50 d-inline-block">
+                    <button type="submit" class="btn btn-primary w-25">Log in</button>
+                </div>
+            </div>
+
+        </form>
+        <div class="mt-3">
+            <div class="w-25 d-inline-block"><!-- just a dummy block to make margin --></div>
+            <a href="{% url 'signup' %}">Create new account</a>
+        </div>
+{% endblock %}

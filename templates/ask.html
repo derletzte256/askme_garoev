@@ -1,0 +1,41 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="col-8">
+        <div class="d-flex gap-3 align-items-center mb-3">
+            <h1>New question</h1>
+        </div>
+        <form class="d-flex flex-column gap-3">
+            <div>
+                <label for="titleInput" class="form-label">Title</label>
+                <input type="text" class="form-control is-invalid float-end w-75" id="titleInput" maxlength="127"
+                       placeholder="You input"/>
+                <div class="invalid-feedback float-end w-75">
+                    Please enter the text.
+                </div>
+            </div>
+            <div>
+                <label for="textInput" class="form-label">Text</label>
+                <textarea class="form-control is-invalid w-75 float-end" id="textInput" rows="6" maxlength="255"
+                          placeholder="You text"></textarea>
+                <div class="invalid-feedback float-end w-75">
+                    Please enter the text.
+                </div>
+            </div>
+            <div>
+                <label for="tagsInput" class="form-label">Tags</label>
+                <input type="text" class="form-control is-invalid w-75 float-end" id="tagsInput" maxlength="127"
+                       placeholder="Your tags"/>
+                <div class="invalid-feedback float-end w-75">
+                    Please enter the tags.
+                </div>
+            </div>
+            <div class="w-75 align-self-end">
+                <button type="submit" class="btn btn-primary w-25">Ask</button>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
