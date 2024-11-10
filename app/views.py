@@ -4,13 +4,16 @@ from django.core.paginator import Paginator
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
+from random import randint
+
 TAGS = ('blender', 'black jack')
 ANSWERS = [
     {
         'title': f'Answer {i}',
         'text': f'This is the text for answer {i}',
+        'rating': 1 + (i % 7),
+        'is_correct': False
     } for i in range(1, 20)
-
 ]
 
 QUESTIONS = [
@@ -20,6 +23,8 @@ QUESTIONS = [
         'id': i,
         'tags': TAGS,
         'answers': ANSWERS,
+        'answers_len': len(ANSWERS),
+        'rating': 1 + (i % 7)
     } for i in range(1, 20)
 ]
 
@@ -39,7 +44,10 @@ def paginate(objects_list, request, per_page=10):
     except PageNotAnInteger:
         page_obj = paginator.get_page(1)
     except EmptyPage:
-        page_obj = paginator.get_page(paginator.num_pages)
+        if int(page) > paginator.num_pages:
+            page_obj = paginator.get_page(paginator.num_pages)
+        else:
+            paginator.get_page(1)
 
     return page_obj.object_list, page_obj
 
