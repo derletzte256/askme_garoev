@@ -7,7 +7,7 @@ from django.shortcuts import render
 from .models import Question, Answer, Profile, Tag
 
 def get_top_users_and_tags():
-    top_users = Profile.objects.get_top_users_by_questions_count()
+    top_users = Profile.objects.get_top_users_by_question_likes_count()
     top_tags = Tag.objects.top_tags_by_questions_count()
     return top_users, top_tags
 

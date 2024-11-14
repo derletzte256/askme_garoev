@@ -8,8 +8,8 @@ class ProfileManager(models.Manager):
         queryset = queryset.select_related('user')
         return queryset
     
-    def get_top_users_by_questions_count(self):
-        users_ids = self.get_queryset().annotate(questions_count=Count('user__questions')).order_by('-questions_count')[:5].values_list('user', flat=True)
+    def get_top_users_by_question_likes_count(self):
+        users_ids = self.get_queryset().annotate(likes_count=Count('user__questions__likes')).order_by('-likes_count')[:5].values_list('user', flat=True)
         return User.objects.filter(id__in=users_ids)
     
 class Profile(models.Model):
@@ -127,7 +127,7 @@ class QuestionLike(models.Model):
         unique_together = ['question', 'author']
 
     def __str__(self):
-        return str(self.id)
+        return f"{self.author.username} liked {self.question.title[:10]}..."
 
 class AnswerLike(models.Model):
     id = models.AutoField(primary_key=True)  
@@ -138,4 +138,4 @@ class AnswerLike(models.Model):
         unique_together = ['answer', 'author']
 
     def __str__(self):
-        return str(self.id)
+        return f"{self.author.username} liked {self.answer.content[:10]}..."
