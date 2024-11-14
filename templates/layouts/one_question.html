@@ -7,17 +7,17 @@
                 <div class="border mt-2 ratio ratio-1x1 rounded">
                     <img src="{% static 'img/cat.jpg' %}" alt="Image" class="img-fluid rounded">
                 </div>
-                {% include 'layouts/rating.html' with rating=question.rating %}
+                {% include 'layouts/rating.html' with rating=question.likes_count %}
             </div>
             <div class="col-9">
                 <h3 class="card-title">{{ question.title }}</h3>
-                <p class="card-text">{{ question.text }}</p>
+                <p class="card-text">{{ question.content }}</p>
 
                 <div class="d-flex gap-3">
 
                     Tags:
                     <div class="d-flex">
-                        {% for tag in question.tags %}
+                        {% for tag in question.tags.all %}
                             {% include 'layouts/tag.html' %}
                         {% endfor %}
                     </div>

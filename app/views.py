@@ -4,35 +4,15 @@ from django.core.paginator import Paginator
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
-from random import randint
+from .models import Question, Answer, Profile, Tag
 
-TAGS = ('blender', 'black jack')
-ANSWERS = [
-    {
-        'title': f'Answer {i}',
-        'text': f'This is the text for answer {i}',
-        'rating': 1 + (i % 7),
-        'is_correct': False
-    } for i in range(1, 20)
-]
-
-QUESTIONS = [
-    {
-        'title': f'Question {i}',
-        'text': f'This is the text for question {i}',
-        'id': i,
-        'tags': TAGS,
-        'answers': ANSWERS,
-        'answers_len': len(ANSWERS),
-        'rating': 1 + (i % 7)
-    } for i in range(1, 20)
-]
+def get_top_users_and_tags():
+    top_users = Profile.objects.get_top_users_by_questions_count()
+    top_tags = Tag.objects.top_tags_by_questions_count()
+    return top_users, top_tags
 
 
 def paginate(objects_list, request, per_page=10):
-    # use Paginator
-    # Also add somthing to PageNotAnInteger and EmptyPage
-
     page = request.GET.get('page')
     paginator = Paginator(objects_list, per_page,
                           error_messages={'invalid_page': 'Page not found',
@@ -49,44 +29,72 @@ def paginate(objects_list, request, per_page=10):
         else:
             paginator.get_page(1)
 
-    return page_obj.object_list, page_obj
+    page_data = {
+        'page': page_obj.number,
+        'next_page_number': page_obj.next_page_number() if page_obj.has_next() else None,
+        'previous_page_number': page_obj.previous_page_number() if page_obj.has_previous() else None,
+        'pages': paginator.num_pages,
+        'has_previous': page_obj.has_previous(),
+        'has_next': page_obj.has_next(),
+    }
+
+    return page_obj.object_list, page_data
 
 
 def index(request):
-    questions, page = paginate(QUESTIONS, request, 5)
-    return render(request, 'index.html', context={'questions': questions, 'page_obj': page})
+    top_users, top_tags = get_top_users_and_tags()
+    all_questions = Question.objects.new()
+    questions, page_data = paginate(all_questions, request, 5)
+    return render(request, 'index.html', context={'questions': questions, 'page_data': page_data, 'top_users': top_users, 'top_tags': top_tags})
 
 
 def hot(request):
-    hot_questions = copy.deepcopy(QUESTIONS)
-    hot_questions.reverse()
-    hot_questions, page = paginate(hot_questions, request, 5)
-    return render(request, 'hot.html', context={'questions': hot_questions, 'page_obj': page})
+    top_users, top_tags = get_top_users_and_tags()
+    all_questions = Question.objects.hot()
+    questions, page_data = paginate(all_questions, request, 5)
+    return render(request, 'hot.html', context={'questions': questions, 'page_data': page_data, 'top_users': top_users, 'top_tags': top_tags})
 
 
 def question(request, question_id):
-    one_question = QUESTIONS[question_id - 1]
-    answers, page = paginate(one_question['answers'], request, 5)
-    return render(request, 'question.html', context={'question': one_question, 'answers': answers, 'page_obj': page})
+    top_users, top_tags = get_top_users_and_tags()
+    try:
+        question = Question.objects.by_id(question_id)
+    except Question.DoesNotExist:
+        return page_not_found(request, "Question not found")   
+    all_answers = Answer.objects.by_question(question_id)
+    answers, page_data = paginate(all_answers, request, 5)
+    return render(request, 'question.html', context={'question': question, 'answers': answers, 'page_data': page_data, 'top_users': top_users, 'top_tags': top_tags})
 
 
 def ask(request):
-    return render(request, 'ask.html')
+    top_users, top_tags = get_top_users_and_tags()
+    return render(request, 'ask.html', context={'top_users': top_users, 'top_tags': top_tags})
 
 
 def tag(request, tag_name):
-    tag_questions = [question for question in QUESTIONS if tag_name in question['tags']]
-    tag_questions, page = paginate(tag_questions, request, 5)
-    return render(request, 'tag.html', context={'questions': tag_questions, 'tag': tag_name, 'page_obj': page})
+    top_users, top_tags = get_top_users_and_tags()
+    all_questions = Question.objects.by_tag(tag_name)
+    if not all_questions:
+        return page_not_found(request, "Tag not found")
+    questions, page_data = paginate(all_questions, request, 5)
+    return render(request, 'tag.html', context={'questions': questions, 'tag': tag_name, 'page_data': page_data, 'top_users': top_users, 'top_tags': top_tags})
 
 
 def login(request):
-    return render(request, 'login.html')
+    top_users, top_tags = get_top_users_and_tags()
+    return render(request, 'login.html', context={'top_users': top_users, 'top_tags': top_tags})
 
 
 def signup(request):
-    return render(request, 'signup.html')
+    top_users, top_tags = get_top_users_and_tags()
+    return render(request, 'signup.html', context={'top_users': top_users, 'top_tags': top_tags})
 
 
 def settings(request):
-    return render(request, 'settings.html')
+    top_users, top_tags = get_top_users_and_tags()
+    return render(request, 'settings.html', context={'top_users': top_users, 'top_tags': top_tags})
+
+
+def page_not_found(request, exception):
+    top_users, top_tags = get_top_users_and_tags()
+    return render(request, '404.html', context={'top_users': top_users, 'top_tags': top_tags})

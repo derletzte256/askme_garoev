@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-pd7@rj0s)spva@+i2_1#qyw!xvofs@1_3@y4ink!kl1(o+-h$a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'app.apps.AppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,9 +77,13 @@ WSGI_APPLICATION = 'askme_garoev.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "OPTIONS": {
+            "options": "-c search_path=myschema",
+            "service": "askme_db",
+            "passfile": ".my_pgpass",
+        },
     }
 }
 

@@ -55,23 +55,17 @@
             <section class="mb-3 mt-5">
                 <h3>Popular tags</h3>
                 <div class="gap-1">
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-primary">Perl</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-secondary">Python</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-success">PostgreSQL</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-danger">Golang</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-warning">Docker</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-info">Kubernetes</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-light">Discord</span></a>
-                    <a href="{% url 'tag' 'blender' %}"><span class="badge rounded-pill text-bg-dark">Youtube</span></a>
+                    {% for tag in top_tags %}
+                        <a href="{% url 'tag' tag.name %}"><span class="badge rounded-pill text-bg-primary">{{ tag.name }}</span></a>
+                    {% endfor %}
                 </div>
             </section>
             <section>
                 <h3>Best member</h3>
                 <ul class="d-flex flex-column">
-                    <a href="#">Member</a>
-                    <a href="#">Member</a>
-                    <a href="#">Member</a>
-                    <a href="#">Member</a>
+                    {% for user in top_users %}
+                        <a href="#">{{ user.username }}</a>
+                    {% endfor %}
                 </ul>
             </section>
         </div>
