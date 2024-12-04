@@ -1,13 +1,13 @@
 {% extends 'layouts/base.html' %}
 
 {% load static %}
-
+{% load bootstrap5 %}
 {% block content %}
     <div class="col-8">
         <div class="d-flex gap-3 align-items-center mb-3">
             <h1>New question</h1>
         </div>
-        <form class="d-flex flex-column gap-3">
+        <!-- <form class="d-flex flex-column gap-3">
             <div>
                 <label for="titleInput" class="form-label">Title</label>
                 <input type="text" class="form-control is-invalid float-end w-75" id="titleInput" maxlength="127"
@@ -36,6 +36,13 @@
                 <button type="submit" class="btn btn-primary w-25">Ask</button>
             </div>
 
+        </form> -->
+        <form action="{% url 'ask' %}" method="POST">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Ask</button>
+            {% endbuttons %}
         </form>
     </div>
 {% endblock %}

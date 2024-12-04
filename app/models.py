@@ -8,14 +8,14 @@ class ProfileManager(models.Manager):
         queryset = queryset.select_related('user')
         return queryset
     
-    def get_top_users_by_question_likes_count(self):
-        users_ids = self.get_queryset().annotate(likes_count=Count('user__questions__likes')).order_by('-likes_count')[:5].values_list('user', flat=True)
-        return User.objects.filter(id__in=users_ids)
+    def get_top_profiles_by_question_likes_count(self):
+        return self.get_queryset().annotate(likes_count=Count('user__questions__likes')).order_by('-likes_count')[:5]
     
 class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    nickname = models.CharField(max_length=255, unique=False)
 
     objects = ProfileManager()
 
@@ -111,6 +111,14 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.content
+    
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            Question.objects.filter(pk=self.question_id).update(
+                answers_count=models.F('answers_count') + 1
+            )
 
     class Meta:
         indexes = [
@@ -126,6 +134,14 @@ class QuestionLike(models.Model):
     class Meta:
         unique_together = ['question', 'author']
 
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            Question.objects.filter(pk=self.question_id).update(
+                likes_count=models.F('likes_count') + 1
+            )
+
     def __str__(self):
         return f"{self.author.username} liked {self.question.title[:10]}..."
 
@@ -136,6 +152,14 @@ class AnswerLike(models.Model):
 
     class Meta:
         unique_together = ['answer', 'author']
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            Answer.objects.filter(pk=self.answer_id).update(
+                likes_count=models.F('likes_count') + 1
+            )
 
     def __str__(self):
         return f"{self.author.username} liked {self.answer.content[:10]}..."
