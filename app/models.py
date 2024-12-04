@@ -11,6 +11,9 @@ class ProfileManager(models.Manager):
     def get_top_profiles_by_question_likes_count(self):
         return self.get_queryset().annotate(likes_count=Count('user__questions__likes')).order_by('-likes_count')[:5]
     
+    def by_id(self, profile_id):
+        return self.get_queryset().filter(id=profile_id)
+    
 class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

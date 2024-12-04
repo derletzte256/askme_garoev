@@ -69,7 +69,7 @@
                 <h3>Best member</h3>
                 <ul class="d-flex flex-column">
                     {% for profile in top_profiles %}
-                        <a href="#">{{ profile.nickname }}</a>
+                        <a href="{% url 'profile' profile.id %}">{{ profile.nickname }}</a>
                     {% endfor %}
                 </ul>
             </section>

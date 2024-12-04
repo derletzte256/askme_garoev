@@ -7,6 +7,7 @@ from django.contrib import auth
 
 from .models import Question, Answer, Profile, Tag
 from .forms import LoginForm, SignupForm, AskForm
+from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 
@@ -50,7 +51,7 @@ def index(request):
         'page_data': page_data,
         'top_profiles': top_profiles,
         'top_tags': top_tags,
-        'user': request.user
+        'user': request.user,
     }
     return render(request, 'index.html', context=context)
 
@@ -63,7 +64,8 @@ def hot(request):
         'questions': questions,
         'page_data': page_data,
         'top_profiles': top_profiles,
-        'top_tags': top_tags
+        'top_tags': top_tags,
+        'user': request.user,
     }
     return render(request, 'hot.html', context=context)
 
@@ -81,7 +83,8 @@ def question(request, question_id):
         'answers': answers,
         'page_data': page_data,
         'top_profiles': top_profiles,
-        'top_tags': top_tags
+        'top_tags': top_tags,
+        'user': request.user
     }
     return render(request, 'question.html', context=context)
 
@@ -96,7 +99,8 @@ def ask(request):
     context = {
         'top_profiles': top_profiles,
         'top_tags': top_tags,
-        'form': form
+        'form': form,
+        'user': request.user
     }
     return render(request, 'ask.html', context=context)
 
@@ -112,7 +116,8 @@ def tag(request, tag_name):
         'tag': tag_name,
         'page_data': page_data,
         'top_profiles': top_profiles,
-        'top_tags': top_tags
+        'top_tags': top_tags,
+        'user': request.user
     }
     return render(request, 'tag.html', context=context)
 
@@ -134,7 +139,8 @@ def login(request):
     context = {
         'top_profiles': top_profiles,
         'top_tags': top_tags,
-        'form': form
+        'form': form,
+        'user': request.user
     }
     return render(request, 'login.html', context=context)
 
@@ -155,7 +161,8 @@ def signup(request):
     context = {
         'top_profiles': top_profiles,
         'top_tags': top_tags,
-        'form': form
+        'form': form,
+        'user': request.user
     }
     return render(request, 'signup.html', context=context)
 
@@ -164,7 +171,8 @@ def settings(request):
     top_profiles, top_tags = get_top_profiles_and_tags()
     context = {
         'top_profiles': top_profiles,
-        'top_tags': top_tags
+        'top_tags': top_tags,
+        'user': request.user
     }
     return render(request, 'settings.html', context=context)
 
@@ -173,6 +181,18 @@ def page_not_found(request, exception):
     top_profiles, top_tags = get_top_profiles_and_tags()
     context = {
         'top_profiles': top_profiles,
-        'top_tags': top_tags
+        'top_tags': top_tags,
+        'user': request.user
     }
     return render(request, '404.html', context=context)
+
+def profile(request, profile_id):
+    top_profiles, top_tags = get_top_profiles_and_tags()
+    profile = get_object_or_404(Profile.objects.by_id(profile_id))
+    context = {
+        'profile': profile,
+        'top_profiles': top_profiles,
+        'top_tags': top_tags,
+        'user': request.user
+    }
+    return render(request, 'profile.html', context=context)

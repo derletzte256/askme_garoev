@@ -73,10 +73,10 @@ class AskForm(forms.Form):
 
     title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control w-100'}), label='Title', max_length=255)
     text = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control w-100'}), label='Text', max_length=2048)
-    tags = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control w-100'}), label='Tags', max_length=255)
+    tags = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control w-100'}), label='Tags', max_length=255, required=False)
 
     def clean_tags(self):
-        return self.cleaned_data['tags'].split(' ')
+        return self.cleaned_data['tags'].split(' ') if self.cleaned_data['tags'] else []
 
     def save(self):
         question = Question.objects.create(

@@ -19,18 +19,19 @@
         {% include 'layouts/pagination.html' %}
     {% endif %}
 
-    <hr class="mt-0"/>
+    {% if user.is_authenticated %}
+        <hr class="mt-0"/>
 
-    <form class="d-flex gap-3 flex-column">
-        <div>
-            <textarea class="form-control is-invalid" id="answerInput" rows="3"
-                      placeholder="Enter your answer here"></textarea>
-            <div class="invalid-feedback">
-                Please enter the answer.
+        <form class="d-flex gap-3 flex-column">
+            <div>
+                <textarea class="form-control is-invalid" id="answerInput" rows="3"
+                        placeholder="Enter your answer here"></textarea>
+                <div class="invalid-feedback">
+                    Please enter the answer.
+                    </div>
             </div>
-        </div>
-        <button type="submit" class="btn btn-primary w-25">Answer {{ answers_len }}</button>
-    </form>
-
+            <button type="submit" class="btn btn-primary w-25">Answer {{ answers_len }}</button>
+        </form>
+    {% endif %}
 {% endblock %}
         
