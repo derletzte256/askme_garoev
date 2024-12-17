@@ -80,7 +80,7 @@
     </div>
 </form> -->
 
-<form action="{% url 'signup' %}" method="POST">
+<form action="{% url 'signup' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form form %}
 

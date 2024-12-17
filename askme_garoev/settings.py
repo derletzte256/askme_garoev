@@ -128,8 +128,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-AVATAR_URL = '/avatars/'
-AVATAR_ROOT = BASE_DIR / 'avatars'
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = BASE_DIR / 'uploads'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

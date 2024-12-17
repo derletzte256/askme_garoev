@@ -1,11 +1,13 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 
 {% block content %}
 <h1>Profile</h1>
 
 <div class="d-flex gap-3">
     <div class="border border-2 rounded" style="width: 200px; height: 200px;">
-        <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid rounded">
+        <img src="{{MEDIA_URL}}{{ profile.avatar }}" alt="Avatar" class="img-fluid rounded">
+        
     </div>
     <div>
         <h2>{{ profile.nickname }}</h2>

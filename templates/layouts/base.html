@@ -11,8 +11,11 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'css/vanilla.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+
+{% csrf_token %}
 
 <nav class="navbar navbar-expand-lg bg-primary-subtle">
     <div class="container-fluid">
@@ -82,5 +85,6 @@
     </div>
 </footer>
 <script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

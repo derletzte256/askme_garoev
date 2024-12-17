@@ -1,13 +1,13 @@
 {% load static %}
 
-<div class="card w-100">
+<div data-question-id="{{ question.id }}" class="question card w-100">
     <div class="card-body">
         <div class="row">
             <div class="col-2 d-flex flex-column gap-2">
                 <div class="border mt-2 ratio ratio-1x1 rounded">
                     <img src="{{ question.author.profile.avatar.url }}" alt="Image" class="img-fluid rounded">
                 </div>
-                {% include 'layouts/rating.html' with rating=question.likes_count %}
+                {% include 'layouts/rating.html' with rating=question.rating has_voted=question.has_voted %}
             </div>
             <div class="col-10">
                 <h5 class="card-title"><a href="{% url 'question' question.id %}">{{ question.title }}</a></h5>

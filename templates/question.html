@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
     <div class="d-flex flex-column gap-3">
@@ -22,7 +23,7 @@
     {% if user.is_authenticated %}
         <hr class="mt-0"/>
 
-        <form class="d-flex gap-3 flex-column">
+        <!-- <form class="d-flex gap-3 flex-column">
             <div>
                 <textarea class="form-control is-invalid" id="answerInput" rows="3"
                         placeholder="Enter your answer here"></textarea>
@@ -30,8 +31,16 @@
                     Please enter the answer.
                     </div>
             </div>
-            <button type="submit" class="btn btn-primary w-25">Answer {{ answers_len }}</button>
+            <button type="submit" class="btn btn-primary w-25">Answer</button>
+        </form> -->
+        <form method="POST">
+            {% bootstrap_form form %}
+            {% csrf_token %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary w-25">Answer</button>
+            {% endbuttons %}
         </form>
+
     {% endif %}
 {% endblock %}
         
