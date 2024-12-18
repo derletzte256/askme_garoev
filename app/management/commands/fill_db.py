@@ -53,10 +53,11 @@ class Command(BaseCommand):
             with open(avatar_path, 'rb') as avatar_file:
                 for user in users:
                     profile = Profile(
-                        user=user
+                        user=user,
+                        nickname=fake.user_name()
                     )
                     profile.avatar.save(
-                        'cat.jpg',
+                        f'cat_{user.id}.jpg',
                         File(avatar_file),
                         save=False
                     )
@@ -135,13 +136,15 @@ class Command(BaseCommand):
             question_likes = []
             for _ in range(ratio * 100):
                 question = random.choice(questions)
+                like_type = random.choice(['like', 'dislike'])
                 question_likes.append(
                     QuestionLike(
                         author=random.choice(users),
-                        question=question
+                        question=question,
+                        type=like_type
                     )
                 )
-                question_likes_count[question.id] += 1
+                question_likes_count[question.id] += 1 if like_type == 'like' else -1
 
             QuestionLike.objects.bulk_create(
                 question_likes, 
@@ -152,13 +155,15 @@ class Command(BaseCommand):
             answer_likes = []
             for _ in range(ratio * 100):
                 answer = random.choice(answers)
+                like_type = random.choice(['like', 'dislike'])
                 answer_likes.append(
                     AnswerLike(
                         author=random.choice(users),
-                        answer=answer
+                        answer=answer,
+                        type=like_type
                     )
                 )
-                answer_likes_count[answer.id] += 1
+                answer_likes_count[answer.id] += 1 if like_type == 'like' else -1
 
             AnswerLike.objects.bulk_create(
                 answer_likes, 
@@ -167,13 +172,13 @@ class Command(BaseCommand):
             )
 
             Question.objects.bulk_update([
-                Question(id=q_id, likes_count=count)
+                Question(id=q_id, rating=count)
                 for q_id, count in question_likes_count.items()
-            ], ['likes_count'], batch_size=self.BATCH_SIZE)
+            ], ['rating'], batch_size=self.BATCH_SIZE)
 
             Answer.objects.bulk_update([
-                Answer(id=a_id, likes_count=count)
+                Answer(id=a_id, rating=count)
                 for a_id, count in answer_likes_count.items()
-            ], ['likes_count'], batch_size=self.BATCH_SIZE)
+            ], ['rating'], batch_size=self.BATCH_SIZE)
 
         self.stdout.write(self.style.SUCCESS('Successfully filled database'))

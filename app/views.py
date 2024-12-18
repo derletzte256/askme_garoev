@@ -5,11 +5,11 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 
 from .models import Question, Answer, Profile, Tag, QuestionLike, AnswerLike
-from .forms import LoginForm, SignupForm, AskForm, AnswerForm, ProfileEditForm
+from .forms import LoginForm, SignupForm, AskForm, AnswerForm, ProfileEditForm, QuestionLikeForm, AnswerLikeForm, AnswerApproveForm
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 import json
-
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
@@ -295,65 +295,41 @@ def profile(request, profile_id):
 @require_POST
 @login_required(login_url='/login/')
 def like_question(request):
-    body = json.loads(request.body)
-    like_type = body.get('type')
-    question_id = body.get('question_id')
-    question = Question.objects.by_id(question_id).first()
-    if not question:
-        return JsonResponse({'status': 'error', 'message': 'Question not found'}, status=404)
-    if like_type == 'like':
-        like = QuestionLike.objects.create(question=question, author=request.user, type='like')
-        like.save()
-    elif like_type == 'dislike':
-        like = QuestionLike.objects.create(question=question, author=request.user, type='dislike')
-        like.save()
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid like type'}, status=400)
-    question = Question.objects.by_id(question_id).first()
-    if not question:
-        return JsonResponse({'status': 'error', 'message': 'Question not found'}, status=404)
-    current_rating = question.rating
-    return JsonResponse({'status': 'success', 'rating': current_rating})
+    try:
+        data = json.loads(request.body)
+        form = QuestionLikeForm(data=data, user=request.user)
+        if form.is_valid():
+            rating = form.save()
+            return JsonResponse({'status': 'success', 'rating': rating})
+        return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
+    except forms.ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=404)
 
 @require_POST
 @login_required(login_url='/login/')
 def like_answer(request):
-    body = json.loads(request.body)
-    like_type = body.get('type')
-    answer_id = body.get('answer_id')
-    answer = Answer.objects.by_id(answer_id).first()
-    if not answer:
-        return JsonResponse({'status': 'error', 'message': 'Answer not found'}, status=404)
-    if like_type == 'like':
-        like = AnswerLike.objects.create(answer=answer, author=request.user, type='like')
-        like.save()
-    elif like_type == 'dislike':
-        like = AnswerLike.objects.create(answer=answer, author=request.user, type='dislike')
-        like.save()
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid like type'}, status=400)
-    answer = Answer.objects.by_id(answer_id).first()
-    if not answer:
-        print('Answer not found 2')
-        return JsonResponse({'status': 'error', 'message': 'Answer not found'}, status=404)
-    current_rating = answer.rating
-    return JsonResponse({'status': 'success', 'rating': current_rating})
+    try:
+        data = json.loads(request.body)
+        form = AnswerLikeForm(data=data, user=request.user)
+        if form.is_valid():
+            rating = form.save()
+            return JsonResponse({'status': 'success', 'rating': rating})
+        return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
+    except forms.ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=404)
 
 @require_POST
 @login_required(login_url='/login/')
 def approve_answer(request):
-    body = json.loads(request.body)
-    answer_id = body.get('answer_id')
-    question_id = body.get('question_id')
-    answer = Answer.objects.by_id(answer_id).first()
-    question = Question.objects.by_id(question_id).first()
-    if not answer or not question:
-        return JsonResponse({'status': 'error', 'message': 'Answer or question not found'}, status=404)
-    if request.user != question.author:
-        return JsonResponse({'status': 'error', 'message': 'Only question author can approve answers'}, status=403)
-    answer.is_correct = not answer.is_correct
-    answer.save()
-    return JsonResponse({'status': 'success', 'is_correct': answer.is_correct})
+    try:
+        data = json.loads(request.body)
+        form = AnswerApproveForm(data=data, user=request.user)
+        if form.is_valid():
+            is_correct = form.save()
+            return JsonResponse({'status': 'success', 'is_correct': is_correct})
+        return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
+    except forms.ValidationError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=403)
 
 
 

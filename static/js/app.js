@@ -84,8 +84,8 @@ for (const answer of answers) {
                     'X-CSRFToken': csrftoken,
                 },
                 body: JSON.stringify({
-                    'answer_id': answer.dataset.answerId,
-                    'question_id': answer.dataset.questionId,
+                    'answerId': answer.dataset.answerId,
+                    'questionId': answer.dataset.questionId,
                 }),
             })
             fetch(request)

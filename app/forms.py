@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from app.models import Profile, Question, Tag, Answer
+from app.models import Profile, Question, Tag, Answer, QuestionLike, AnswerLike
 
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control w-50'}))
@@ -153,3 +153,86 @@ class ProfileEditForm(forms.Form):
         profile.nickname = self.cleaned_data['nickname']
         profile.avatar = self.cleaned_data['avatar']
         profile.save()
+
+class QuestionLikeForm(forms.Form):
+    questionId = forms.IntegerField()
+    type = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_type(self):
+        like_type = self.cleaned_data['type']
+        if like_type not in ['like', 'dislike']:
+            raise forms.ValidationError('Invalid like type')
+        return like_type
+
+    def save(self):
+        question = Question.objects.by_id(self.cleaned_data['questionId']).first()
+        if not question:
+            raise forms.ValidationError('Question not found')
+            
+        like = QuestionLike.objects.create(
+            question=question,
+            author=self.user,
+            type=self.cleaned_data['type']
+        )
+        like.save()
+        question = Question.objects.by_id(self.cleaned_data['questionId']).first()
+        if not question:
+            raise forms.ValidationError('Question not found')
+        return question.rating
+
+class AnswerLikeForm(forms.Form):
+    answerId = forms.IntegerField()
+    type = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def clean_type(self):
+        like_type = self.cleaned_data['type']
+        if like_type not in ['like', 'dislike']:
+            raise forms.ValidationError('Invalid like type')
+        return like_type
+
+    def save(self):
+        answer = Answer.objects.by_id(self.cleaned_data['answerId']).first()
+        if not answer:
+            raise forms.ValidationError('Answer not found')
+            
+        like = AnswerLike.objects.create(
+            answer=answer,
+            author=self.user,
+            type=self.cleaned_data['type']
+        )
+        like.save()
+        answer = Answer.objects.by_id(self.cleaned_data['answerId']).first()
+        if not answer:
+            raise forms.ValidationError('Answer not found')
+        return answer.rating
+
+class AnswerApproveForm(forms.Form):
+    answerId = forms.IntegerField()
+    questionId = forms.IntegerField()
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self):
+        answer = Answer.objects.by_id(self.cleaned_data['answerId']).first()
+        question = Question.objects.by_id(self.cleaned_data['questionId']).first()
+        
+        if not answer or not question:
+            raise forms.ValidationError('Answer or question not found')
+            
+        if self.user != question.author:
+            raise forms.ValidationError('Only question author can approve answers')
+            
+        answer.is_correct = not answer.is_correct
+        answer.save()
+        answer = Answer.objects.by_id(self.cleaned_data['answerId']).first()
+        return answer.is_correct

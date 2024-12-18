@@ -9,9 +9,12 @@ class ProfileManager(models.Manager):
         return queryset
     
     def get_top_profiles_by_rating(self):
+        # rating=models.Sum('user__questions__rating') + models.Sum
+        #     ('user__answers__rating')
+        # ).order_by('-rating')[:5]
         return self.get_queryset().annotate(
-            rating=models.Sum('user__questions__rating') + models.Sum('user__answers__rating')
-        ).order_by('-rating')[:5]
+            answers_count=models.Count('user__answers')
+        ).order_by('-answers_count')[:5]
     
     def by_id(self, profile_id):
         return self.get_queryset().filter(id=profile_id)
