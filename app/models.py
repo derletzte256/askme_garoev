@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Count
 
+from django.contrib.postgres.search import SearchVector
+
 class ProfileManager(models.Manager):
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -78,7 +80,7 @@ class Question(models.Model):
     rating = models.IntegerField(default=0)
     answers_count = models.IntegerField(default=0)
 
-    objects = QuestionManager()
+    objects = QuestionManager().annotate(search=SearchVector("title", "content"))
 
     def __str__(self):
         return self.title

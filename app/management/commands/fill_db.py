@@ -34,7 +34,7 @@ class Command(BaseCommand):
             Question.tags.through.objects.all().delete()
             Question.objects.all().delete()
             Tag.objects.all().delete()
-            Profile.objects.all().delete()
+            Profile.objects.exclude(user__is_superuser=True).delete()
             User.objects.exclude(is_superuser=True).delete()
 
             self.stdout.write('Generating users and profiles...')

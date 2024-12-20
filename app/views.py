@@ -144,7 +144,7 @@ def handle_ask_form(request, form):
     return None
 
 
-@login_required(login_url='/login/')
+@login_required(login_url=settings.LOGIN_URL)
 def ask(request):
     top_profiles, top_tags = get_top_profiles_and_tags()
     form = AskForm(request.POST or None, user=request.user)
@@ -188,8 +188,8 @@ def handle_login_form(request, form):
         if user:
             auth.login(request, user)
             try:
-                if request.POST.get('next'):
-                    return redirect(request.POST.get('next'))
+                if request.POST.get(settings.REDIRECT_FIELD_NAME):
+                    return redirect(request.POST.get(settings.REDIRECT_FIELD_NAME))
                 return redirect('index')
             except Exception as e:
                 return redirect('index')
@@ -293,7 +293,7 @@ def profile(request, profile_id):
     return render(request, 'profile.html', context=context)
 
 @require_POST
-@login_required(login_url='/login/')
+@login_required(login_url=settings.LOGIN_URL)
 def like_question(request):
     try:
         data = json.loads(request.body)
@@ -306,7 +306,7 @@ def like_question(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=404)
 
 @require_POST
-@login_required(login_url='/login/')
+@login_required(login_url=settings.LOGIN_URL)
 def like_answer(request):
     try:
         data = json.loads(request.body)
@@ -319,7 +319,7 @@ def like_answer(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=404)
 
 @require_POST
-@login_required(login_url='/login/')
+@login_required(login_url=settings.LOGIN_URL)
 def approve_answer(request):
     try:
         data = json.loads(request.body)
