@@ -1,5 +1,4 @@
 # Проект: askme_garoev
-Базовый клон Stack Overflow на Django
 
 ## Общая информация
 
